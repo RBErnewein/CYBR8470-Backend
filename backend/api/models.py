@@ -67,7 +67,6 @@ class Breed(models.Model):
         choices=SZ_CHOICE,
         default='T',
     )
-    
     friendliness = models.IntegerField(default=1,
         validators=[MaxValueValidator(5), MinValueValidator(1)])
     trainability = models.IntegerField(default=1,
