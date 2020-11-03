@@ -34,7 +34,8 @@ class Dog(models.Model):
     name = models.CharField(max_length=50, validators=[MinLengthValidator(1)])
     age = models.IntegerField(max_length=3, default=1,
         validators=[MinValueValidator(0), MaxValueValidator(30)])
-    breed = models.ForeignKey(Breed, default=1, verbose_name="Breed", on_delete= models.SET_DEFAULT)
+    breed = models.ForeignKey(Breed, default=1,
+        verbose_name="Breed", on_delete=models.SET_DEFAULT)
     MALE = 'M'
     FEMALE = 'F'
     GEN_CHOICE = [
