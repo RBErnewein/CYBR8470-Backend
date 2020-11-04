@@ -161,13 +161,86 @@ class ActivateIFTTT(APIView):
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer, )
 
-class DogDetail(APIView):
+class BreedList(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser,parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer, )
 
     def get(self, request, format=None):
-        events = Event.objects.all()
-        json_data = serializers.serialize('json', events)
-        content = {'events': json_data}
+        breeds = Breed.objects.all()
+        json_data = serializers.serialize('json', breeds)
+        content = {'breeds': json_data}
         return HttpResponse(json_data, content_type='json')
+
+    def post(self, request, *args, **kwargs):
+        print 'REQUEST DATA'
+        print str(request.data)
+
+        name = request.data.get('name')
+        size = request.data.get('size')
+        friendliness = request.data.get('friendliness')
+        trainability = request.data.get('trainability')
+        sheddingamount = request.data.get('sheddingamount')
+        exerciseneeds = request.data.get('exerciseneeds')
+
+        newBreed = Breed(
+            name=name,
+            size=size,
+            friendliness=friendliness,
+            trainability=trainability,
+            sheddingamount=sheddingamount,
+            exerciseneeds=exerciseneeds
+        )
+
+        try:
+            newBreed.clean_fields()
+        except ValidationError as e:
+            print e
+            return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
+
+        newBreed.save()
+        print 'New Breed Entered: ' + name
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+class DogList(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def get(self, request, format=None):
+        dogs = Dog.objects.all()
+        json_data = serializers.serialize('json', dogs)
+        content = {'dogs': json_data}
+        return HttpResponse(json_data, content_type='json')
+
+    def post(self, request, *args, **kwargs):
+        print 'REQUEST DATA'
+        print str(request.data)
+
+        name = request.data.get('name')
+        age = request.data.get('age')
+        breed = request.data.get('breed')
+        gender = request.data.get('gender')
+        color = request.data.get('color')
+        favoritefood = request.data.get('favoritefood')
+        favoritetoy = request.data.get('favoritetoy')
+
+        newDog = Dog(
+            name=name,
+            age=age,
+            breed=breed,
+            gender=gender,
+            color=color,
+            favoritefood=favoritefood,
+            favoritetoy=favoritetoy
+        )
+
+        try:
+            newDog.clean_fields()
+        except ValidationError as e:
+            print e
+            return Response({'success':False, 'error':e}, status=status.HTTP_400_BAD_REQUEST)
+
+        newDog.save()
+        print 'New Dog Entered: ' + name
+        return Response({'success': True}, status=status.HTTP_200_OK)

@@ -30,27 +30,6 @@ class ApiKey(models.Model):
 class ApiKeyAdmin(admin.ModelAdmin):
     list_display = ('owner','key')
 
-class Dog(models.Model):
-    name = models.CharField(max_length=50, validators=[MinLengthValidator(1)])
-    age = models.IntegerField(max_length=3, default=1,
-        validators=[MinValueValidator(0), MaxValueValidator(30)])
-    breed = models.ForeignKey(Breed, default=1,
-        verbose_name="Breed", on_delete=models.SET_DEFAULT)
-    MALE = 'M'
-    FEMALE = 'F'
-    GEN_CHOICE = [
-        (MALE, 'Male'),
-        (FEMALE, 'Female'),
-    ]
-    gender = models.CharField(
-        max_length=1,
-        choices=GEN_CHOICE,
-        default='U',
-    )
-    color = models.CharField(max_length=50, validators=[MinLengthValidator(3)])
-    favoritefood = models.CharField(max_length=50, default='')
-    favoritetoy = models.CharField(max_length=50, default='')
-
 class Breed(models.Model):
     name = models.CharField(max_length=50)
     TINY = 'T'
@@ -77,3 +56,23 @@ class Breed(models.Model):
     exerciseneeds = models.IntegerField(default=1,
         validators=[MaxValueValidator(5), MinValueValidator(1)])
 
+class Dog(models.Model):
+    name = models.CharField(max_length=50, validators=[MinLengthValidator(1)])
+    age = models.IntegerField(default=1,
+        validators=[MinValueValidator(0), MaxValueValidator(30)])
+    breed = models.ForeignKey(Breed, default=1,
+        verbose_name="Breed", on_delete=models.SET_DEFAULT)
+    MALE = 'M'
+    FEMALE = 'F'
+    GEN_CHOICE = [
+        (MALE, 'Male'),
+        (FEMALE, 'Female'),
+    ]
+    gender = models.CharField(
+        max_length=1,
+        choices=GEN_CHOICE,
+        default='U',
+    )
+    color = models.CharField(max_length=50, validators=[MinLengthValidator(3)])
+    favoritefood = models.CharField(max_length=50, default='')
+    favoritetoy = models.CharField(max_length=50, default='')
